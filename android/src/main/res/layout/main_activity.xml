@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    >
+    <!-- 
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="Hello World, MainActivity from MAC"
+        /> 
+    -->
+
+    <Button android:id="@+id/borrow_blazer_button"
+        style="@style/ActionButtonStyle"
+        android:onClick="borrowBlazer"
+        android:text="Borrow blazer" />
+
+    <Button android:id="@+id/return_blazer_button"
+        style="@style/ActionButtonStyle"
+        android:onClick="returnBlazer"
+        android:text="Return blazer" />
+
+    <!--
+    <Button android:id="@+id/view_loans_button"
+        style="@style/ActionButtonStyle"
+        android:onClick="viewLoans"
+        android:text="View loans" />
+    -->
+
+    <!-- <Button android:id="@+id/statistics_button"
+        style="@style/ActionButtonStyle"
+        android:onClick="viewStatistics"
+        android:text="View statistics" /> -->
+
+    <!-- <Button android:id="@+id/scanner_button"
+        style="@style/ActionButtonStyle"
+        android:onClick="runScanner"
+        android:text="Run scanner" /> -->
+
+    <!-- <Button android:id="@+id/view_database_button"
+        style="@style/ActionButtonStyle"
+        android:onClick="viewDatabase"
+        android:text="View database" /> -->
+
+</LinearLayout>
+
