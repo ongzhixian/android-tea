@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Blazer Loan</string>
+    <string name="scan">Scan</string>
+
+    <string name="scan_format">scan format</string>
+    <string name="scan_button">scan button</string>
+
+    <string name="android_animation">Android Animation</string>
+    <string name="zoom">Zoom</string>
+    <string name="move">Move</string>
+    
+
+    <string name="edit_message">edit</string>
+    <string name="button_send">send</string>
+</resources>
