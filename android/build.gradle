@@ -172,7 +172,7 @@ repositories {
 dependencies {
     // ZX: Don't think we need this
     // implementation project(":lib")
-    implementation 'com.android.support:appcompat-v7:28.0.0'
+    implementation 'com.android.support:appcompat-v7:22.2.0'
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 }
 

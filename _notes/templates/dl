@@ -1,0 +1,18 @@
+# dl => Display log
+
+if [ -z "$1" ] 
+then
+    echo "No argument supplied"
+#    exit 113
+fi
+
+# clear (flush) the entire log and exit
+adb logcat -c
+#
+# adb logcat *:S $1:V 
+# Available TAGS:
+# MainActivity
+# ReturnBlazerActivity
+# BorrowBlazerActivity
+# ViewStatisticsActivity
+adb logcat *:S MainActivity:V ScanBarcodeActivity:V BarcodeProcessor:V BorrowBlazerActivity:V ViewStatisticsActivity:v

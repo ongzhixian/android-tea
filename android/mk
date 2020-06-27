@@ -1,0 +1,4 @@
+# mk => make
+./gradlew assembleDebug --configure-on-demand --parallel --daemon
+
+# ZX: On Linux and MacOS, use mk for test compile, and mk2 to compile and deploy
