@@ -3,6 +3,7 @@
     android:orientation="vertical"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
+    android:gravity="center"
     >
     <!-- 
     <TextView
@@ -13,15 +14,37 @@
         /> 
     -->
 
-    <Button android:id="@+id/borrow_blazer_button"
+    <TextView android:id="@+id/tag_textview"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:textSize="32sp"
+        android:text="Tag" />
+
+    
+    <!-- <EditText
+      android:id="@+id/tag_edittext"
+      android:text="tag text" 
+      android:inputType="text" /> -->
+
+    <EditText android:id="@+id/tag_edittext"
+        android:layout_height="wrap_content"
+        android:layout_width="200sp"
+        android:padding="20dp"
+        android:gravity="center_horizontal"
+        android:hint="tag text"
+        android:textSize="20sp"
+        android:layout_marginBottom="50sp"
+        android:inputType="text"/>
+
+    <Button android:id="@+id/scan_button"
         style="@style/ActionButtonStyle"
         android:onClick="borrowBlazer"
-        android:text="Borrow blazer" />
+        android:text="Scan" />
 
-    <Button android:id="@+id/return_blazer_button"
+    <Button android:id="@+id/upload_button"
         style="@style/ActionButtonStyle"
         android:onClick="returnBlazer"
-        android:text="Return blazer" />
+        android:text="Upload" />
 
     <!--
     <Button android:id="@+id/view_loans_button"

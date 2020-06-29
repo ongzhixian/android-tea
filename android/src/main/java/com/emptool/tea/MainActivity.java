@@ -63,19 +63,22 @@ public class MainActivity extends AppCompatActivity
     //     // boolean isWiFi = activeNetwork.getType() == ConnectivityManager.TYPE_WIFI;
     // }
 
-    // public void borrowBlazer(View view) {
-    //     Log.v(LOG_TAG, "borrow blazer");
+    public void borrowBlazer(View view) {
+        Log.v(LOG_TAG, "borrow blazer");
 
-    //     Intent intent = new Intent(this, BorrowBlazerActivity.class);
-    //     startActivity(intent);
-    // }
+        // Intent intent = new Intent(this, BorrowBlazerActivity.class);
+        // startActivity(intent);
+    }
 
-    // public void returnBlazer(View view) {
-    //     Log.v(LOG_TAG, "return blazer");
+    public void returnBlazer(View view) {
+        Log.v(LOG_TAG, "return blazer");
 
-    //     Intent intent = new Intent(this, ReturnBlazerActivity.class);
-    //     startActivity(intent);
-    // }
+        // Intent intent = new Intent(this, ReturnBlazerActivity.class);
+        // startActivity(intent);
+
+        Intent intent = new Intent(this, ScanBarcodeActivity.class);
+        startActivityForResult(intent, 1);
+    }
 
     // public void viewLoans(View view) {
     //     Log.v(LOG_TAG, "viewStats");
