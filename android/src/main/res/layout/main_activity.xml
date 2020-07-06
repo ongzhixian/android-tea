@@ -19,18 +19,25 @@
         android:gravity="center_horizontal"
         android:hint="tag text"
         android:textSize="20sp"
-        android:layout_marginBottom="50sp"
+        android:layout_marginBottom="100sp"
         android:inputType="text"/>
 
+    <!-- 
     <Button android:id="@+id/scan_button"
         style="@style/ActionButtonStyle"
         android:onClick="scanBarcode"
         android:text="Dummy" />
+    -->
 
-    <Button android:id="@+id/upload_button"
+    <Button android:id="@+id/scan_button"
         style="@style/ActionButtonStyle"
         android:onClick="scanBarcode"
         android:text="Scan" />
+
+    <Button android:id="@+id/upload_button"
+        style="@style/ActionButtonStyle"
+        android:onClick="uploadScanned"
+        android:text="Upload" />
 
 </LinearLayout>
 

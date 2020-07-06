@@ -64,7 +64,7 @@ public class MainActivity extends AppCompatActivity
     // }
 
     public void scanBarcode(View view) {
-        Log.v(LOG_TAG, "borrow blazer");
+        Log.v(LOG_TAG, "scan barcode");
 
         // Intent intent = new Intent(this, BorrowBlazerActivity.class);
         // startActivity(intent);
@@ -81,7 +81,7 @@ public class MainActivity extends AppCompatActivity
         }
         catch (Exception ex)
         {
-            Log.e(LOG_TAG, "yahosome ", ex);
+            Log.e(LOG_TAG, "scanBarcode error", ex);
         }
 
         

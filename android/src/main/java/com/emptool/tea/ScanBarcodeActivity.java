@@ -3,6 +3,8 @@ package com.emptool.tea;
 import android.util.Log;
 import android.util.SparseArray;
 import android.os.Bundle;
+import android.os.Vibrator;
+import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 
@@ -31,6 +33,8 @@ public class ScanBarcodeActivity extends AppCompatActivity implements BarcodeHan
     CameraSource cameraSource = null;
     BarcodeDetector barcodeDetector = null;
 
+    Vibrator vibrator = null;
+
     // UI variables
     SurfaceView cameraView = null;
     TextView barcodeFormat = null;
@@ -40,6 +44,7 @@ public class ScanBarcodeActivity extends AppCompatActivity implements BarcodeHan
     BarcodeProcessor barcodeProcessor = null;
 
     String scannerMode = null;
+    String previousValue = "";
 
     /** Called when the activity is first created. */
     @Override
@@ -48,11 +53,8 @@ public class ScanBarcodeActivity extends AppCompatActivity implements BarcodeHan
         Log.v(LOG_TAG, "onCreate");
 
         super.onCreate(savedInstanceState);
-
-Log.v(LOG_TAG, "setContentView");
         setContentView(R.layout.scan_barcode_activity);
 
-Log.v(LOG_TAG, "savedInstanceState");
         if (savedInstanceState == null) {
             Bundle extras = getIntent().getExtras();
             if (extras != null) {
@@ -60,18 +62,14 @@ Log.v(LOG_TAG, "savedInstanceState");
             }
         }
 
-Log.v(LOG_TAG, "cameraView");
         cameraView = (SurfaceView)findViewById(R.id.camera_view);
         barcodeFormat = (TextView)findViewById(R.id.barcode_format);
         barcodeValue = (TextView)findViewById(R.id.barcode_value);
 
-Log.v(LOG_TAG, "InitializeCamera");
-        InitializeCamera();
+        vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
 
-Log.v(LOG_TAG, "SetDisplayMode");
+        InitializeCamera();
         SetDisplayMode();
-        
-Log.v(LOG_TAG, "onCreate end");
 
     }
 
@@ -114,14 +112,14 @@ Log.v(LOG_TAG, "onCreate end");
     void InitializeCamera()
     {
         this.barcodeDetector = new BarcodeDetector.Builder(this)
-            // .setBarcodeFormats(Barcode.ALL_FORMATS)
+            //.setBarcodeFormats(Barcode.ALL_FORMATS)
             .build();
         
         this.cameraSource = new CameraSource
             .Builder(this, barcodeDetector)
-            .setRequestedPreviewSize(640, 480)
+            .setRequestedPreviewSize(480, 480)
             .setRequestedFps(30)
-            //.setAutoFocusEnabled(true)
+            .setAutoFocusEnabled(true)
             .build();
 
         this.cameraCallback = new CameraCallback(this.cameraSource);
@@ -129,17 +127,19 @@ Log.v(LOG_TAG, "onCreate end");
         this.barcodeProcessor = new BarcodeProcessor(this);
         this.barcodeProcessor.barcodeFormatTextView = barcodeFormat;
         this.barcodeProcessor.barcodeValueTextView = barcodeValue;
+        
         this.barcodeDetector.setProcessor(this.barcodeProcessor);
+
 
     }
 
     String getBarcodeFormat(int format) {
         switch (format)
         {
-            // case Barcode.ALL_FORMATS:   // 0
-            //     return "ALL_FORMATS";
-            // case Barcode.AZTEC:         // 4096
-            //     return "AZTEC";
+            case Barcode.ALL_FORMATS:   // 0
+                return "ALL_FORMATS";
+            case Barcode.AZTEC:         // 4096
+                return "AZTEC";
             case Barcode.CODABAR:       // 8
                 return "CODABAR"; 
             case Barcode.CODE_128:      // 1
@@ -198,6 +198,19 @@ Log.v(LOG_TAG, "onCreate end");
     {
         if ((scannerMode != null) && (SCANNER_MODE_DEBUG.equals(scannerMode))) {
             // Do nothing
+            Log.v(LOG_TAG, "handleBarcodeB - do nothing");
+
+            Log.v(LOG_TAG, "handleBarcodeB1 - previous is [" + previousValue + "], barcode is [" + barcode + "]");
+            if (!previousValue.equals(barcode)) {
+
+                // 
+                vibrator.vibrate(250);
+                previousValue = barcode;
+                Log.v(LOG_TAG, "handleBarcodeB2 - previous is [" + previousValue + "], barcode is [" + barcode + "]");
+            }
+
+            
+
         } else {
             Log.v(LOG_TAG, "handleBarcodeB - NORMAL");
             // Handling for normal scanner usage
@@ -233,6 +246,15 @@ Log.v(LOG_TAG, "onCreate end");
         }
 
         return true;
+    }
+
+    
+    public void toggleFlash(View view) {
+
+        Log.v(LOG_TAG, "toggle flash");
+
+        this.cameraCallback.ToggleTorchLight();
+
     }
 
 }

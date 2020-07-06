@@ -41,6 +41,11 @@
         android:text="Last scanned value: N/A"
         />
 
+    <Button android:id="@+id/toggle_flash_button"
+        style="@style/ActionButtonStyle"
+        android:onClick="toggleFlash"
+        android:text="Toggle flash" />
+
     <!-- <TextView android:id="@+id/instruction_header_textview"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
