@@ -5,26 +5,12 @@
     android:layout_height="fill_parent"
     android:gravity="center"
     >
-    <!-- 
-    <TextView
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:text="Hello World, MainActivity from MAC"
-        /> 
-    -->
 
     <TextView android:id="@+id/tag_textview"
         android:layout_height="wrap_content"
         android:layout_width="wrap_content"
         android:textSize="32sp"
         android:text="Tag" />
-
-    
-    <!-- <EditText
-      android:id="@+id/tag_edittext"
-      android:text="tag text" 
-      android:inputType="text" /> -->
 
     <EditText android:id="@+id/tag_edittext"
         android:layout_height="wrap_content"
@@ -38,35 +24,13 @@
 
     <Button android:id="@+id/scan_button"
         style="@style/ActionButtonStyle"
-        android:onClick="borrowBlazer"
-        android:text="Scan" />
+        android:onClick="scanBarcode"
+        android:text="Dummy" />
 
     <Button android:id="@+id/upload_button"
         style="@style/ActionButtonStyle"
-        android:onClick="returnBlazer"
-        android:text="Upload" />
-
-    <!--
-    <Button android:id="@+id/view_loans_button"
-        style="@style/ActionButtonStyle"
-        android:onClick="viewLoans"
-        android:text="View loans" />
-    -->
-
-    <!-- <Button android:id="@+id/statistics_button"
-        style="@style/ActionButtonStyle"
-        android:onClick="viewStatistics"
-        android:text="View statistics" /> -->
-
-    <!-- <Button android:id="@+id/scanner_button"
-        style="@style/ActionButtonStyle"
-        android:onClick="runScanner"
-        android:text="Run scanner" /> -->
-
-    <!-- <Button android:id="@+id/view_database_button"
-        style="@style/ActionButtonStyle"
-        android:onClick="viewDatabase"
-        android:text="View database" /> -->
+        android:onClick="scanBarcode"
+        android:text="Scan" />
 
 </LinearLayout>
 

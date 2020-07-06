@@ -48,8 +48,11 @@ public class ScanBarcodeActivity extends AppCompatActivity implements BarcodeHan
         Log.v(LOG_TAG, "onCreate");
 
         super.onCreate(savedInstanceState);
+
+Log.v(LOG_TAG, "setContentView");
         setContentView(R.layout.scan_barcode_activity);
 
+Log.v(LOG_TAG, "savedInstanceState");
         if (savedInstanceState == null) {
             Bundle extras = getIntent().getExtras();
             if (extras != null) {
@@ -57,12 +60,19 @@ public class ScanBarcodeActivity extends AppCompatActivity implements BarcodeHan
             }
         }
 
+Log.v(LOG_TAG, "cameraView");
         cameraView = (SurfaceView)findViewById(R.id.camera_view);
         barcodeFormat = (TextView)findViewById(R.id.barcode_format);
         barcodeValue = (TextView)findViewById(R.id.barcode_value);
 
+Log.v(LOG_TAG, "InitializeCamera");
         InitializeCamera();
+
+Log.v(LOG_TAG, "SetDisplayMode");
         SetDisplayMode();
+        
+Log.v(LOG_TAG, "onCreate end");
+
     }
 
     @Override
