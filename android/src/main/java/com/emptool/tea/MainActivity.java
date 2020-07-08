@@ -9,11 +9,31 @@ import android.view.View;
 import android.view.MenuInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.EditText;
+
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.RequestQueue;
+import com.android.volley.VolleyError;
+
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
+
+import org.json.JSONObject;
+import org.json.JSONException;
 
 // ZX: Status OK
 public class MainActivity extends AppCompatActivity
 {
     private static final String LOG_TAG = "MainActivity"; // This needs to within 23 char
+
+    // Constants use for main activity
+    public static final String TAG = "TAG";
+
+    EditText tagEditText = null;
+    
+    
 
     /** Called when the activity is first created. */
     @Override
@@ -23,6 +43,9 @@ public class MainActivity extends AppCompatActivity
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_activity);
+
+        tagEditText = (EditText)findViewById(R.id.tag_edittext);
+    
     }
 
     @Override
@@ -75,6 +98,7 @@ public class MainActivity extends AppCompatActivity
 
             Log.v(LOG_TAG, "putExtra");
             intent.putExtra(ScanBarcodeActivity.SCANNER_MODE, ScanBarcodeActivity.SCANNER_MODE_DEBUG);
+            intent.putExtra(MainActivity.TAG, tagEditText.getText().toString()); 
 
             Log.v(LOG_TAG, "startActivity");
             startActivity(intent);
@@ -87,14 +111,13 @@ public class MainActivity extends AppCompatActivity
         
     }
 
-    public void returnBlazer(View view) {
-        Log.v(LOG_TAG, "return blazer");
+    public void uploadScanned(View view) {
+        Log.v(LOG_TAG, "uploadScanned");
 
-        // Intent intent = new Intent(this, ReturnBlazerActivity.class);
-        // startActivity(intent);
 
-        Intent intent = new Intent(this, ScanBarcodeActivity.class);
-        startActivityForResult(intent, 1);
+        DoApiCall("android asdad some mess");
+        // Intent intent = new Intent(this, ScanBarcodeActivity.class);
+        // startActivityForResult(intent, 1);
     }
 
     // public void viewLoans(View view) {
@@ -134,6 +157,81 @@ public class MainActivity extends AppCompatActivity
     //     String message = editText.getText().toString();
     //     intent.putExtra(EXTRA_MESSAGE, message);
     //     startActivity(intent);
-    // }
+    // }''
+
+    void DoApiCall(String msg) {
+
+        boolean result = false;
+        RequestQueue queue = Volley.newRequestQueue(this);
+        String api_url ="https://asia-east2-zxshell.cloudfunctions.net/tea_message";
+        
+        JSONObject requestParameters = new JSONObject();
+        try {
+            requestParameters.put("msg", msg);
+
+            // Other parameters from db
+            // requestParameters.put("id", "some sample msg");
+            // requestParameters.put("tag", "some sample msg");
+            // requestParameters.put("data", "some sample msg");
+            // requestParameters.put("cre_dt", "some sample msg");
+
+        } catch (JSONException e) {
+            //some exception handler code.
+        } 
+
+        JsonObjectRequest jsObjRequest = new JsonObjectRequest(Request.Method.POST, api_url, requestParameters, 
+            new Response.Listener<JSONObject>() {
+                @Override
+                public void onResponse(JSONObject response) {
+
+                    Log.v(LOG_TAG, response.toString());
+
+                    // Response should be a JSON like the below
+                    // {
+                    //     "result_message": "OK", 
+                    //     "name": "api_borrow_blazer", 
+                    //     "blazer_id": "XS-0001", 
+                    //     "result": true, 
+                    //     "student_id": "STUD-1234566"
+                    // }
+
+                    // try {
+                    //     // Log.v(LOG_TAG, response.get("result").toString());
+                    //     // String result = response.get("result").toString();
+                    //     // String resultMessage = response.get("result_message").toString();
+                    //     // String blazerId = response.get("blazer_id").toString();
+
+                    //     // if ((result.equals("true")) && (resultMessage.equals("OK"))) {
+                    //     //     //Log.v(LOG_TAG, "onActivityResult : BARCODE[" + studentId + "]");
+                    //     //     instructions_textview.setText("Blazer " + blazerId + " is return to store.");
+                    //     //     SetDisplayState(STATE_RETURN_SUCCESS);
+                    //     // } else {
+                    //     //     instructions_textview.setText("Return action failed. " + resultMessage);
+                    //     // }
+                    // } catch (JSONException e) {
+                    //     //some exception handler code.
+                    //     //instructions_textview.setText("JSONException: " + e.toString());
+                    //     Log.v(LOG_TAG, "JSONException: " + e.toString());
+                    //     throw e;
+                    // }
+                    
+                }
+            }, 
+            new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    // TODO Auto-generated method stub
+                    Log.v(LOG_TAG, error.toString());
+                }
+            }
+        ) {
+            @Override
+            public String getBodyContentType() {
+                return "application/json";
+            }
+        };
+
+        queue.add(jsObjRequest);
+    }
 
 }

@@ -43,8 +43,11 @@ public class ScanBarcodeActivity extends AppCompatActivity implements BarcodeHan
     CameraCallback cameraCallback = null;
     BarcodeProcessor barcodeProcessor = null;
 
+    String tagText = null;
     String scannerMode = null;
     String previousValue = "";
+
+    TeaDbHelper db = null;
 
     /** Called when the activity is first created. */
     @Override
@@ -59,6 +62,7 @@ public class ScanBarcodeActivity extends AppCompatActivity implements BarcodeHan
             Bundle extras = getIntent().getExtras();
             if (extras != null) {
                 scannerMode = extras.getString(SCANNER_MODE);
+                tagText = extras.getString(MainActivity.TAG);
             }
         }
 
@@ -67,6 +71,7 @@ public class ScanBarcodeActivity extends AppCompatActivity implements BarcodeHan
         barcodeValue = (TextView)findViewById(R.id.barcode_value);
 
         vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+        db = new TeaDbHelper(this);
 
         InitializeCamera();
         SetDisplayMode();
@@ -203,6 +208,7 @@ public class ScanBarcodeActivity extends AppCompatActivity implements BarcodeHan
             Log.v(LOG_TAG, "handleBarcodeB1 - previous is [" + previousValue + "], barcode is [" + barcode + "]");
             if (!previousValue.equals(barcode)) {
 
+                db.SaveScanData(tagText, barcode);
                 // 
                 vibrator.vibrate(250);
                 previousValue = barcode;
@@ -250,11 +256,12 @@ public class ScanBarcodeActivity extends AppCompatActivity implements BarcodeHan
 
     
     public void toggleFlash(View view) {
-
         Log.v(LOG_TAG, "toggle flash");
-
         this.cameraCallback.ToggleTorchLight();
-
     }
+
+    
+
+
 
 }

@@ -176,6 +176,7 @@ dependencies {
     implementation 'com.android.support:appcompat-v7:22.0.0'
     implementation 'com.android.support:design:22.2.0'
     implementation 'com.google.android.gms:play-services-vision:9.4.0+'
+    implementation 'com.android.volley:volley:1.0.0'
 
     // implementation 'com.android.support:appcompat-v7:26.0.2'
     // implementation 'com.google.mlkit:barcode-scanning:16.0.0'
