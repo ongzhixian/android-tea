@@ -10,6 +10,7 @@ import android.view.MenuInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -32,8 +33,9 @@ public class MainActivity extends AppCompatActivity
     public static final String TAG = "TAG";
 
     EditText tagEditText = null;
-    
-    
+    TextView pendingUploadTextView = null;
+
+    Thread uploadThread = null;
 
     /** Called when the activity is first created. */
     @Override
@@ -45,8 +47,42 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.main_activity);
 
         tagEditText = (EditText)findViewById(R.id.tag_edittext);
+        pendingUploadTextView = (TextView)findViewById(R.id.pending_upload_textview);
     
+
+
     }
+
+    // void startBackgroundThread() {
+    //     uploadThread = new Thread(new Runnable() {
+    //         @Override
+    //         public void run() {
+
+    //             for (int i = 0; i < 5; i++) {
+
+    //                 try {
+
+    //                     Thread.sleep(2000);
+    //                     pendingUploadTextView.setText(Integer.toString(i));
+    //                     Log.v(LOG_TAG, "startBackgroundThread");
+
+    //                 } catch (Exception e) {
+    //                     pendingUploadTextView.setText("err");
+    //                 }
+    //             }
+
+    //             // a potentially time consuming task
+    //             // final Bitmap bitmap = processBitMap("image.png");
+    //             // imageView.post(new Runnable() {
+    //             //     public void run() {
+    //             //         imageView.setImageBitmap(bitmap);
+    //             //     }
+    //             // });
+    //         }
+    //     });
+
+    //     uploadThread.start();
+    // }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
