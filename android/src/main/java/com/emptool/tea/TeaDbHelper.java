@@ -86,7 +86,7 @@ public class TeaDbHelper extends SQLiteOpenHelper {
         return count;
     }
 
-    public ArrayList GetLoanRecord(String status)
+    public ArrayList GetRecords(String status)
     {
         SQLiteDatabase db = this.getReadableDatabase();
 
@@ -149,6 +149,26 @@ public class TeaDbHelper extends SQLiteOpenHelper {
         String title = "MyNewTitle";
         ContentValues values = new ContentValues();
         values.put("status", 1);
+
+        // Which row to update, based on the title
+        String selection = "id = ?";
+        String[] selectionArgs = { Integer.toString(id) };
+
+        int count = db.update(
+            "scan_data",
+            values,
+            selection,
+            selectionArgs);
+    }
+
+    public void Reset(int id)
+    {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        // New value for one column
+        String title = "MyNewTitle";
+        ContentValues values = new ContentValues();
+        values.put("status", 0);
 
         // Which row to update, based on the title
         String selection = "id = ?";
