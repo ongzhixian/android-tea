@@ -3,8 +3,12 @@
  <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item android:drawable="@color/colorPrimary" />
+    
     <item>
         <bitmap android:gravity="center" android:src="@drawable/ic_launcher" />
+    </item>
+    <item>
+        <bitmap android:gravity="right" android:src="@drawable/resolution_tag" />
     </item>
  
 </layer-list>
