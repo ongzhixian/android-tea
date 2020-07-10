@@ -1,7 +1,9 @@
 package com.emptool.tea;
 
+import java.util.ArrayList;
 import android.util.Log;
 import android.content.Intent;
+import android.content.Context;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
@@ -11,6 +13,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -19,10 +22,14 @@ import com.android.volley.VolleyError;
 
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
+
 import com.android.volley.toolbox.Volley;
 
 import org.json.JSONObject;
+import org.json.JSONArray;
 import org.json.JSONException;
+
+
 
 // ZX: Status OK
 public class MainActivity extends AppCompatActivity
@@ -36,6 +43,7 @@ public class MainActivity extends AppCompatActivity
     TextView pendingUploadTextView = null;
 
     Thread uploadThread = null;
+    TeaDbHelper db = null;
 
     /** Called when the activity is first created. */
     @Override
@@ -48,9 +56,11 @@ public class MainActivity extends AppCompatActivity
 
         tagEditText = (EditText)findViewById(R.id.tag_edittext);
         pendingUploadTextView = (TextView)findViewById(R.id.pending_upload_textview);
-    
 
-
+        db = new TeaDbHelper(this);
+        pendingUploadTextView.setText(
+            String.format("Pending upload(s): %d", db.GetCount("0"))
+        );
     }
 
     // void startBackgroundThread() {
@@ -151,9 +161,64 @@ public class MainActivity extends AppCompatActivity
         Log.v(LOG_TAG, "uploadScanned");
 
 
-        DoApiCall("android asdad some mess");
-        // Intent intent = new Intent(this, ScanBarcodeActivity.class);
-        // startActivityForResult(intent, 1);
+        // DoApiCall("android asdad some mess");
+
+        ArrayList recordList = db.GetRecords("0");
+
+        int listLen = recordList.size();
+
+        JSONArray scanDataList = new JSONArray();
+        // for(int i=0; i < yourarray.length(); i++) {
+        // }
+
+        // for (int i = 0; i < recordList.size(); i++)
+        // {
+        //     ScanDataRecord rec = (ScanDataRecord)recordList.get(i);
+        //     // public int Id;
+        //     // public String Tag;
+        //     // public String Data;
+        //     // public String CreDt;
+        //     Log.v(LOG_TAG, 
+        //         String.format("Id: %d, Tag: %s, Data: %s, CreDt: %s", rec.Id, rec.Tag, rec.Data, rec.CreDt)
+        //     );
+
+        //     JSONObject newScanDataRec = new JSONObject();
+        //     try {
+        //         newScanDataRec.put("id", rec.Id);
+        //         newScanDataRec.put("tag", rec.Tag);
+        //         newScanDataRec.put("data", rec.Data);
+        //         newScanDataRec.put("cre_dt", rec.CreDt);
+        //         scanDataList.put(newScanDataRec);   // create array and add items into that 
+        //     } catch (JSONException e) {
+        //         //some exception handler code.
+        //     } 
+        // }
+
+        
+        ScanDataRecord rec = (ScanDataRecord)recordList.get(0);
+        Log.v(LOG_TAG, 
+            String.format("Id: %d, Tag: %s, Data: %s, CreDt: %s", rec.Id, rec.Tag, rec.Data, rec.CreDt)
+        );
+
+        JSONObject newScanDataRec = new JSONObject();
+        try {
+            newScanDataRec.put("id", rec.Id);
+            newScanDataRec.put("tag", rec.Tag);
+            newScanDataRec.put("data", rec.Data);
+            newScanDataRec.put("cre_dt", rec.CreDt);
+            scanDataList.put(newScanDataRec);   // create array and add items into that 
+        } catch (JSONException e) {
+            //some exception handler code.
+        }
+
+        
+        SendTeaScanData(scanDataList);
+
+        // 
+        pendingUploadTextView.setText(
+            String.format("Pending upload(s): %d", db.GetCount("0"))
+        );
+        
     }
 
     // public void viewLoans(View view) {
@@ -195,11 +260,134 @@ public class MainActivity extends AppCompatActivity
     //     startActivity(intent);
     // }''
 
+    void ShowToast(String message) {
+        Context context = getApplicationContext();
+        //CharSequence text = "Hello toast!";
+        int duration = Toast.LENGTH_SHORT;
+
+        Toast toast = Toast.makeText(context, message, duration);
+        toast.show();
+    }
+
+    void SendTeaScanData(JSONArray dataList) {
+
+        Log.v(LOG_TAG, "SendTeaScanData");
+
+        boolean result = false;
+        RequestQueue queue = Volley.newRequestQueue(this);
+        String api_url ="https://asia-east2-zxshell.cloudfunctions.net/tea_scan_data";
+
+        Log.v(LOG_TAG, dataList.toString());
+        
+        //JSONObject requestParameters = null;
+        JSONObject requestParameters = new JSONObject();
+        
+        try {
+
+            //requestParameters = new JSONObject(dataList.toString());
+            requestParameters.put("data_type", "tea_scan_data");
+            requestParameters.put("data", dataList);
+
+            // Other parameters from db
+            // requestParameters.put("id", "some sample msg");
+            // requestParameters.put("tag", "some sample msg");
+            // requestParameters.put("data", "some sample msg");
+            // requestParameters.put("cre_dt", "some sample msg");
+
+        } catch (JSONException e) {
+            //some exception handler code.
+        } 
+
+        JsonObjectRequest jsObjRequest = new JsonObjectRequest(Request.Method.POST, api_url, requestParameters, 
+            new Response.Listener<JSONObject>() {
+                @Override
+                public void onResponse(JSONObject response) {
+
+                    Log.v(LOG_TAG, response.toString());
+
+                    try
+                    {
+
+                        int resultCount = response.getInt("count");
+                        String result = response.getString("result");
+                        JSONArray resultIdList = response.getJSONArray("id_list");
+
+                        Log.v(LOG_TAG, String.format("result count %d", resultCount));
+                        Log.v(LOG_TAG, String.format("result xxxxx %s", result));
+                        Log.v(LOG_TAG, String.format("result count %d", resultIdList.length()));
+
+                        for (int i = 0; i < resultIdList.length(); i++) {
+                            int id = resultIdList.getInt(i);
+                            
+                            Log.v(LOG_TAG, String.format("result i %d, id %d", i, id));
+
+                            db.Update(id);
+                        }
+                    } catch (JSONException e) {
+                        //some exception handler code.
+                    }
+
+                    // Response should be a JSON like the below
+                    // {
+                    //     "result_message": "OK", 
+                    //     "name": "api_borrow_blazer", 
+                    //     "blazer_id": "XS-0001", 
+                    //     "result": true, 
+                    //     "student_id": "STUD-1234566"
+                    // }
+
+                    // try {
+                    //     // Log.v(LOG_TAG, response.get("result").toString());
+                    //     // String result = response.get("result").toString();
+                    //     // String resultMessage = response.get("result_message").toString();
+                    //     // String blazerId = response.get("blazer_id").toString();
+
+                    //     // if ((result.equals("true")) && (resultMessage.equals("OK"))) {
+                    //     //     //Log.v(LOG_TAG, "onActivityResult : BARCODE[" + studentId + "]");
+                    //     //     instructions_textview.setText("Blazer " + blazerId + " is return to store.");
+                    //     //     SetDisplayState(STATE_RETURN_SUCCESS);
+                    //     // } else {
+                    //     //     instructions_textview.setText("Return action failed. " + resultMessage);
+                    //     // }
+                    // } catch (JSONException e) {
+                    //     //some exception handler code.
+                    //     //instructions_textview.setText("JSONException: " + e.toString());
+                    //     Log.v(LOG_TAG, "JSONException: " + e.toString());
+                    //     throw e;
+                    // }
+                    
+                }
+            }, 
+            new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    // TODO Auto-generated method stub
+                    Log.v(LOG_TAG, error.toString());
+                }
+            }
+        ) {
+            @Override
+            public String getBodyContentType() {
+                return "application/json";
+            }
+        };
+
+        queue.add(jsObjRequest);
+    }
+
+
     void DoApiCall(String msg) {
 
         boolean result = false;
         RequestQueue queue = Volley.newRequestQueue(this);
         String api_url ="https://asia-east2-zxshell.cloudfunctions.net/tea_message";
+
+        //ShowToast("asd");
+        // JSONArray care_type = new JSONArray();
+        // for(int i=0; i < yourarray.length(); i++) {
+        //     care_type.put(yourarray[i]);   // create array and add items into that 
+        // }
+
         
         JSONObject requestParameters = new JSONObject();
         try {
@@ -221,6 +409,7 @@ public class MainActivity extends AppCompatActivity
                 public void onResponse(JSONObject response) {
 
                     Log.v(LOG_TAG, response.toString());
+
 
                     // Response should be a JSON like the below
                     // {
