@@ -143,7 +143,7 @@ public class TeaDbHelper extends SQLiteOpenHelper {
 
     public void Update(int id)
     {
-        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        SQLiteDatabase db = this.getWritableDatabase();
 
         // New value for one column
         String title = "MyNewTitle";
@@ -152,7 +152,7 @@ public class TeaDbHelper extends SQLiteOpenHelper {
 
         // Which row to update, based on the title
         String selection = "id = ?";
-        String[] selectionArgs = { id };
+        String[] selectionArgs = { Integer.toString(id) };
 
         int count = db.update(
             "scan_data",
@@ -163,7 +163,7 @@ public class TeaDbHelper extends SQLiteOpenHelper {
 
     public void ClearRecords()
     {
-        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        SQLiteDatabase db = this.getWritableDatabase();
 
         // Define 'where' part of query.
         String selection = "status = ?";
